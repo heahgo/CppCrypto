@@ -2,7 +2,7 @@
 
 class AesCore {
     private:
-        int* ex_key;
+        int* ex_key_;
         int* KeyExpantion(int* key, int size);
         int* AddRoundKey(int block[16]);
         int* ShiftRows(int block[16]);
@@ -16,10 +16,10 @@ class AesCore {
 
     public:
         AesCore(int* key, int size) {
-            ex_key = KeyExpantion(key, size);
+            ex_key_ = KeyExpantion(key, size);
         }
         ~AesCore() {
-            delete[] ex_key;
+            delete[] ex_key_;
         }
 };
 
