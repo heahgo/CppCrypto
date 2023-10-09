@@ -1,7 +1,14 @@
 #include "../../include/aes/aes.h"
 
 uint8_t mult8(uint8_t x, uint8_t y) {
-    
+    uint8_t result = 0;
+    while (y) {
+        if (y & 0x01) result ^= x;
+        y >>= 1;
+        x <<= 1;
+        if (x & 0x100) x^= 0x1b;
+    }
+    return result;
 }
 
 uint8_t* AesCore::KeyExpantion(uint8_t* key, uint8_t key_byte_size) {
