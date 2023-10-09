@@ -4,7 +4,7 @@
 
 class AesCore {
     public:
-        uint8_t mult8(uint8_t x, uint8_t y);
+        uint8_t Mult8(uint8_t x, uint8_t y);
     private:
         uint8_t* ex_key_;
         uint8_t* KeyExpantion(uint8_t* key, uint8_t key_byte_size);
