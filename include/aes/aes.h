@@ -2,10 +2,15 @@
 #include <iostream>
 #include <cstdint>
 
+
+
 class AesCore {
+    public:
+        uint8_t mult8(uint8_t x, uint8_t y);
     private:
         uint8_t* ex_key_;
         uint8_t* KeyExpantion(uint8_t* key, uint8_t key_byte_size);
+
         void AddRoundKey(uint8_t block[16], uint8_t key[16]);
         void ShiftRows(uint8_t block[16]);
         void InvShiftRows(uint8_t block[16]);
