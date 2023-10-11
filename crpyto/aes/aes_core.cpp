@@ -31,6 +31,7 @@ AesCore::~AesCore() {
 }
 
 uint8_t* AesCore::KeyExpantion(uint8_t* key, uint8_t key_byte_size, uint8_t cols) {
+    uint8_t rcon[] = {0x01, 0x02, 0x04, 0x08, 0x10, 0x20, 0x40, 0x80, 0x1b, 0x36};
 
     // int* ex_key = new int[]
     // return ex_key
