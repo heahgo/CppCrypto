@@ -1,6 +1,6 @@
 #include "../../include/aes/aes.h"
 
-uint8_t mult8(uint8_t x, uint8_t y) {
+uint8_t Mult8(uint8_t x, uint8_t y) {
     uint8_t result = 0;
     while (y) {
         if (y & 0x01) result ^= x;
