@@ -70,15 +70,34 @@ void AesCore::ShiftRows(uint8_t block[16]) {
     block[7] = tmp;
 }
 
-void InvShiftRows(uint8_t block[16]) {
+void AesCore::InvShiftRows(uint8_t block[16]) {
     // block[0] block[4] block[8] block[12]      block[0]  block[4]  block[8]  block[12]
     // block[1] block[5] block[9] block[13]  =>  block[13] block[1]  block[5]  block[9]
     // block[2] block[6] block[10] block[14]     block[10] block[14] block[2]  block[6]
     // block[3] block[7] block[11] block[15]     block[7]  block[11] block[15] block[3]
+    uint8_t tmp;
+    tmp = block[9];
+    block[9] = block[5];
+    block[5] = block[1];
+    block[1] = block[13];
+    block[13] = tmp;
+
+    tmp = block[2];
+    block[2] = block[10];
+    block[10] = tmp;
+    tmp = block[6];
+    block[6] = block[14];
+    block[14] = tmp;
+
+    tmp = block[3];
+    block[3] = block[7];
+    block[7] = block[11];
+    block[11] = block[15];
+    block[15] = tmp;
 }
-void MixColumns(int block[16]);
-void InvMixColumns(int block[16]);
-void SubBytes(int block[16]);
-void InvSubBytes(int block[16]);
-void EncBlock(int block[16]);
-void DecBlock(int block[16]);
+// void AesCore::MixColumns(int block[16]);
+// void AesCore::InvMixColumns(int block[16]);
+// void AesCore::SubBytes(int block[16]);
+// void AesCore::InvSubBytes(int block[16]);
+// void AesCore::EncBlock(int block[16]);
+// void AesCore::DecBlock(int block[16]);
