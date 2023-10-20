@@ -49,7 +49,27 @@ void AesCore::ShiftRows(uint8_t block[16]) {
     // block[1] block[5] block[9] block[13]  =>  block[5]  block[9]  block[13] block[1]
     // block[2] block[6] block[10] block[14]     block[10] block[14] block[2]  block[6]
     // block[3] block[7] block[11] block[15]     block[15] block[3]  block[7]  block[11]
+    uint8_t tmp;
+    tmp = block[1];
+    block[1] = block[5];
+    block[5] = block[9];
+    block[9] = block[13];
+    block[13] = tmp;
+
+    tmp = block[6];
+    block[6] = block[14];
+    block[14] = tmp;
+    tmp = block[10];
+    block[10] = block[2];
+    block[2] = tmp;
+
+    tmp = block[3];
+    block[3] = block[15];
+    block[15] = block[11];
+    block[11] = block[7];
+    block[7] = tmp;
 }
+
 void InvShiftRows(uint8_t block[16]) {
     // block[0] block[4] block[8] block[12]      block[0]  block[4]  block[8]  block[12]
     // block[1] block[5] block[9] block[13]  =>  block[13] block[1]  block[5]  block[9]
