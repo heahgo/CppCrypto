@@ -163,8 +163,3 @@ void AesCore::InvMixColumns(uint8_t block[16]) {
         block[i*4+3] = Mult8(tmp0,0x0B)^Mult8(tmp1,0x0D)^Mult8(tmp2,0x09)^Mult8(tmp3,0x0E);
     }
 }
-
-void AesCore::AddRoundKey(uint8_t block[16], uint8_t key[16]) {
-    for (uint8_t i = 0; i < 16; i++)
-        block[i] = block[i]^key[i];
-}
