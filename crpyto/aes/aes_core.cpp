@@ -109,3 +109,57 @@ void AesCore::InvShiftRows(uint8_t block[16]) {
     block[11] = block[15];
     block[15] = tmp;
 }
+
+void AesCore::MixColumns(uint8_t block[16]) {
+
+    //         Matrix Multiplication in a Glois Filed 
+    //
+    //  +----+----+----+----+           +----+----+----+----+
+    //  | 02 | 03 | 01 | 01 |           | 00 | 04 | 08 | 12 |
+    //  +----+----+----+----+           +----+----+----+----+
+    //  | 01 | 02 | 03 | 01 |           | 01 | 05 | 09 | 13 |
+    //  +----+----+----+----+     *     +----+----+----+----+
+    //  | 01 | 01 | 02 | 03 |           | 02 | 06 | 10 | 14 |
+    //  +----+----+----+----+           +----+----+----+----+
+    //  | 03 | 01 | 01 | 02 |           | 03 | 07 | 11 | 15 |
+    //  +----+----+----+----+           +----+----+----+----+
+
+    for (uint8_t i = 0; i < 4; i++) {
+        uint8_t tmp0 = block[i*4];
+        uint8_t tmp1 = block[i*4+1];
+        uint8_t tmp2 = block[i*4+2];
+        uint8_t tmp3 = block[i*4+3];
+
+        block[i*4+0] = Mult8(tmp0,0x02)^Mult8(tmp1,0x03)^Mult8(tmp2,0x01)^Mult8(tmp3,0x01);
+        block[i*4+1] = Mult8(tmp0,0x01)^Mult8(tmp1,0x02)^Mult8(tmp2,0x03)^Mult8(tmp3,0x01);
+        block[i*4+2] = Mult8(tmp0,0x01)^Mult8(tmp1,0x01)^Mult8(tmp2,0x02)^Mult8(tmp3,0x03);
+        block[i*4+3] = Mult8(tmp0,0x03)^Mult8(tmp1,0x01)^Mult8(tmp2,0x01)^Mult8(tmp3,0x02);
+    }
+}
+
+void AesCore::InvMixColumns(uint8_t block[16]) {
+
+    //         Matrix Multiplication in a Glois Filed 
+    //
+    //  +----+----+----+----+           +----+----+----+----+
+    //  | 0E | 0B | 0D | 09 |           | 00 | 04 | 08 | 12 |
+    //  +----+----+----+----+           +----+----+----+----+
+    //  | 09 | 0E | 0B | 0D |           | 01 | 05 | 09 | 13 |
+    //  +----+----+----+----+     *     +----+----+----+----+
+    //  | 0D | 09 | 0E | 0B |           | 02 | 06 | 10 | 14 |
+    //  +----+----+----+----+           +----+----+----+----+
+    //  | 0B | 0D | 09 | 0E |           | 03 | 07 | 11 | 15 |
+    //  +----+----+----+----+           +----+----+----+----+
+
+    for (uint8_t i = 0; i < 4; i++) {
+        uint8_t tmp0 = block[i*4];
+        uint8_t tmp1 = block[i*4+1];
+        uint8_t tmp2 = block[i*4+2];
+        uint8_t tmp3 = block[i*4+3];
+
+        block[i*4+0] = Mult8(tmp0,0x0E)^Mult8(tmp1,0x0B)^Mult8(tmp2,0x0D)^Mult8(tmp3,0x09);
+        block[i*4+1] = Mult8(tmp0,0x09)^Mult8(tmp1,0x0E)^Mult8(tmp2,0x0B)^Mult8(tmp3,0x0D);
+        block[i*4+2] = Mult8(tmp0,0x0D)^Mult8(tmp1,0x09)^Mult8(tmp2,0x0E)^Mult8(tmp3,0x0B);
+        block[i*4+3] = Mult8(tmp0,0x0B)^Mult8(tmp1,0x0D)^Mult8(tmp2,0x09)^Mult8(tmp3,0x0E);
+    }
+}
