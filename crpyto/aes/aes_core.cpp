@@ -169,3 +169,10 @@ void AesCore::SubBytes(uint8_t block[16]) {
         block[i] = sbox[block[i]];
     }
 }
+
+
+void AesCore::InvSubBytes(uint8_t block[16]) {
+    for (uint8_t i = 0; i < 16; i++) {
+        block[i] = inv_sbox[block[i]];
+    }
+}
