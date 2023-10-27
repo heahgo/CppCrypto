@@ -1,5 +1,5 @@
 class Cipher {
     public:
-        virtual void encrypt() = 0;
-        virtual void decrypt() = 0;
+        virtual void Encrypt() = 0;
+        virtual void Decrypt() = 0;
 };
