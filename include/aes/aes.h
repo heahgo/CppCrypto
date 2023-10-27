@@ -5,7 +5,8 @@
 class AesCore {
     private:
         uint8_t* ex_key_;
-        uint8_t key_byte_size_;
+        uint8_t round_;
+        uint8_t Mult8(uint8_t x, uint8_t y);
         uint8_t* KeyExpantion(uint8_t* key, uint8_t key_byte_size, uint8_t cols);
         void AddRoundKey(uint8_t block[16], uint8_t key[16]);
         void ShiftRows(uint8_t block[16]);
@@ -14,8 +15,6 @@ class AesCore {
         void InvMixColumns(uint8_t block[16]);
         void SubBytes(uint8_t block[16]);
         void InvSubBytes(uint8_t block[16]);
-        void EncBlock(uint8_t block[16]);
-        void DecBlock(uint8_t block[16]);
     public:        
         uint8_t sbox[256] = {
                                 0x63, 0x7C, 0x77, 0x7B, 0xF2, 0x6B, 0x6F, 0xC5, 0x30, 0x01, 0x67, 0x2B, 0xFE, 0xD7, 0xAB, 0x76,
@@ -54,9 +53,10 @@ class AesCore {
                                 0xA0, 0xE0, 0x3B, 0x4D, 0xAE, 0x2A, 0xF5, 0xB0, 0xC8, 0xEB, 0xBB, 0x3C, 0x83, 0x53, 0x99, 0x61,
                                 0x17, 0x2B, 0x04, 0x7E, 0xBA, 0x77, 0xD6, 0x26, 0xE1, 0x69, 0x14, 0x63, 0x55, 0x21, 0x0C, 0x7D
                             };
-        uint8_t Mult8(uint8_t x, uint8_t y);
         AesCore(uint8_t* key, uint8_t key_byte_size);
         ~AesCore();
+        void EncBlock(uint8_t block[16]);
+        void DecBlock(uint8_t block[16]);
 };
 
 
