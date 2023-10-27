@@ -15,6 +15,8 @@ uint8_t Mult8(uint8_t x, uint8_t y) {
 
 AesCore::AesCore(uint8_t* key, uint8_t key_byte_size) {
     uint8_t round;
+    key_byte_size_ = key_byte_size;
+    
     if (key_byte_size == 16) {
         round = 10;
     } else if (key_byte_size == 24) {
