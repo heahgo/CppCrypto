@@ -1,10 +1,11 @@
 #pragma once
+#include "../cipher.h"
 #include <iostream>
 #include <cstdlib>
 #include <cstring>
 #include <cstdint>
 
-class AesCore {
+class AesCore : public Cipher {
     private:
         uint8_t* ex_key_;
         uint8_t round_;
