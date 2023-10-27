@@ -36,27 +36,28 @@ uint8_t* AesCore::KeyExpantion(uint8_t* key, uint8_t key_byte_size, uint8_t roun
     uint8_t rcon[] = {0x01, 0x02, 0x04, 0x08, 0x10, 0x20, 0x40, 0x80, 0x1b, 0x36};
     uint8_t* ex_key = new uint8_t[(round+1)*16];
     uint8_t nk =  key_byte_size >> 2;
-    #define RotWord(dword) (dword<<8)&0xffffffff | (dword>>24)&0xffffffff
+    #define RotWord(dword) (dword>>8)&0xffffffff | (dword<<24)&0xffffffff
     #define XorWord(dword1, dword2) dword1 ^ dword2
     #define SubWord(dword) sbox[dword>>24]<<24 | sbox[(dword<<8)>>24]<<16 | sbox[(dword<<16)>>24]<<8 | sbox[(dword<<24)>>24]
-    memcpy(&ex_key, &key, nk*4);
-    for (uint8_t i = nk; i <= (round*4); i++) {
+    memcpy(ex_key, key, nk*4);
+    for (uint8_t i = nk; i < (round+1)*4; i++) {
         uint32_t tmp, tmp2;
-        memcpy(&tmp, &ex_key+(i-1)*4, 4);
-        memcpy(&tmp2, &ex_key+(i-nk)*4, 4);
+        memcpy(&tmp, ex_key+(i-1)*4, 4);
+        memcpy(&tmp2, ex_key+(i-nk)*4, 4);
         if (i % nk == 0) {
             tmp = RotWord(tmp);
             tmp = SubWord(tmp);
             tmp = XorWord(tmp, tmp2);
-            tmp = XorWord(tmp, (uint32_t)rcon[i/nk-1]<<24);
-            memcpy(&ex_key+i*4, &tmp, 4);
+            tmp = XorWord(tmp, (uint32_t)rcon[i/nk-1]); //(uint32_t)rcon[i/nk-1]<<24); byte order
+            printf("%08X\n----------------\n", tmp);
+            memcpy(ex_key+i*4, &tmp, 4);
         } else if (nk > 6 && i % nk == 4) {
             tmp = SubWord(tmp);
             tmp = XorWord(tmp, tmp2);
-            memcpy(&ex_key+i*4, &tmp, 4);
+            memcpy(ex_key+i*4, &tmp, 4);
         } else {
             tmp = XorWord(tmp, tmp2);
-            memcpy(&ex_key+i*4, &tmp, 4);
+            memcpy(ex_key+i*4, &tmp, 4);
         }
     }
     return ex_key;
