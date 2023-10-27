@@ -7,15 +7,18 @@ uint8_t AesCore::Mult8(uint8_t x, uint8_t y) {
     while (y) {
         if (y & 0x01) result ^= x;
         y >>= 1;
-        x <<= 1;
-        if (x & 0x100) x^= 0x1b;
+        if (x & 0x80) {
+            x <<= 1;
+            x^= 0x1b;
+        } else {
+            x <<= 1;
+        }
     }
-    return result;
+    return result & 0xff;
 }
 
 AesCore::AesCore(uint8_t* key, uint8_t key_byte_size) {
-    uint8_t round;
-    key_byte_size_ = key_byte_size;
+    uint8_t round = 0;
 
     if (key_byte_size == 16) {
         round = 10;
@@ -26,7 +29,7 @@ AesCore::AesCore(uint8_t* key, uint8_t key_byte_size) {
     } else {
         throw std::length_error("Key Length is only used 128, 192, 256 bit!!");
     }
-
+    round_ = round;
     ex_key_ = KeyExpantion(key, key_byte_size, round);
 }
 
@@ -50,8 +53,7 @@ uint8_t* AesCore::KeyExpantion(uint8_t* key, uint8_t key_byte_size, uint8_t roun
             tmp = RotWord(tmp);
             tmp = SubWord(tmp);
             tmp = XorWord(tmp, tmp2);
-            tmp = XorWord(tmp, (uint32_t)rcon[i/nk-1]); //(uint32_t)rcon[i/nk-1]<<24); byte order
-            printf("%08X\n----------------\n", tmp);
+            tmp = XorWord(tmp, (uint32_t)rcon[i/nk-1]); 
             memcpy(ex_key+i*4, &tmp, 4);
         } else if (nk > 6 && i % nk == 4) {
             tmp = SubWord(tmp);
@@ -198,9 +200,38 @@ void AesCore::SubBytes(uint8_t block[16]) {
     }
 }
 
-
 void AesCore::InvSubBytes(uint8_t block[16]) {
     for (uint8_t i = 0; i < 16; i++) {
         block[i] = inv_sbox[block[i]];
     }
+}
+
+void AesCore::EncBlock(uint8_t block[16]) {
+    uint8_t round_key[16];
+    AddRoundKey(block, ex_key_); 
+    for (uint8_t i = 1; i < round_; i++) {
+        memcpy(round_key, ex_key_+i*16, 16);
+        SubBytes(block);
+        ShiftRows(block);
+        MixColumns(block);
+        for (uint8_t i = 0; i < 16; i++) 
+            printf("%02x", block[i]); 
+        AddRoundKey(block, round_key);
+    }
+
+    memcpy(round_key, ex_key_+round_*16, 16);
+    SubBytes(block);
+    ShiftRows(block);
+    AddRoundKey(block, round_key);
+}
+
+
+int main() {
+    uint8_t key[16] = {0x54, 0x68, 0x61, 0x74, 0x73, 0x20, 0x6D, 0x79, 0x20, 0x4B, 0x75, 0x6E, 0x67, 0x20, 0x46, 0x75};
+    AesCore crypto = AesCore(key, 16);
+    uint8_t block[16] = {0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x0a, 0x0b, 0x0c, 0x0d, 0x0e, 0x0f};
+    crypto.EncBlock(block);
+    for (uint8_t i = 0; i < 16; i++) 
+        printf("%02x", block[i]); 
+    printf("\n");
 }
