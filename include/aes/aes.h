@@ -1,6 +1,8 @@
 #pragma once
-#include <cstdint>
 #include <iostream>
+#include <cstdlib>
+#include <cstring>
+#include <cstdint>
 
 class AesCore {
     private:

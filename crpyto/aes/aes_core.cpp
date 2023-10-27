@@ -1,6 +1,4 @@
 #include "../../include/aes/aes.h"
-#include <cstdlib>
-#include <cstring>
 
 uint8_t AesCore::Mult8(uint8_t x, uint8_t y) {
     uint8_t result = 0;
