@@ -1,4 +1,6 @@
 #include "../../include/aes/aes.h"
+#include <cstdlib>
+#include <cstring>
 
 uint8_t Mult8(uint8_t x, uint8_t y) {
     uint8_t result = 0;
@@ -12,29 +14,53 @@ uint8_t Mult8(uint8_t x, uint8_t y) {
 }
 
 AesCore::AesCore(uint8_t* key, uint8_t key_byte_size) {
-    uint8_t cols;
+    uint8_t round;
     if (key_byte_size == 16) {
-        cols = 10;
+        round = 10;
     } else if (key_byte_size == 24) {
-        cols = 12;
+        round = 12;
     } else if (key_byte_size == 32) {
-        cols = 14;
+        round = 14;
     } else {
         throw std::length_error("Key Length is only used 128, 192, 256 bit!!");
     }
 
-    ex_key_ = KeyExpantion(key, key_byte_size, cols);
+    ex_key_ = KeyExpantion(key, key_byte_size, round);
 }
 
 AesCore::~AesCore() {
     delete[] ex_key_;
 }
 
-uint8_t* AesCore::KeyExpantion(uint8_t* key, uint8_t key_byte_size, uint8_t cols) {
+uint8_t* AesCore::KeyExpantion(uint8_t* key, uint8_t key_byte_size, uint8_t round) {
     uint8_t rcon[] = {0x01, 0x02, 0x04, 0x08, 0x10, 0x20, 0x40, 0x80, 0x1b, 0x36};
-
-    // int* ex_key = new int[]
-    // return ex_key
+    uint8_t* ex_key = new uint8_t[(round+1)*16];
+    uint8_t nk =  key_byte_size >> 2;
+    #define RotWord(dword) (dword>>8)&0xffffffff | (dword<<24)&0xffffffff
+    #define XorWord(dword1, dword2) dword1 ^ dword2
+    #define SubWord(dword) sbox[dword>>24]<<24 | sbox[(dword<<8)>>24]<<16 | sbox[(dword<<16)>>24]<<8 | sbox[(dword<<24)>>24]
+    memcpy(ex_key, key, nk*4);
+    for (uint8_t i = nk; i < (round+1)*4; i++) {
+        uint32_t tmp, tmp2;
+        memcpy(&tmp, ex_key+(i-1)*4, 4);
+        memcpy(&tmp2, ex_key+(i-nk)*4, 4);
+        if (i % nk == 0) {
+            tmp = RotWord(tmp);
+            tmp = SubWord(tmp);
+            tmp = XorWord(tmp, tmp2);
+            tmp = XorWord(tmp, (uint32_t)rcon[i/nk-1]); //(uint32_t)rcon[i/nk-1]<<24); byte order
+            printf("%08X\n----------------\n", tmp);
+            memcpy(ex_key+i*4, &tmp, 4);
+        } else if (nk > 6 && i % nk == 4) {
+            tmp = SubWord(tmp);
+            tmp = XorWord(tmp, tmp2);
+            memcpy(ex_key+i*4, &tmp, 4);
+        } else {
+            tmp = XorWord(tmp, tmp2);
+            memcpy(ex_key+i*4, &tmp, 4);
+        }
+    }
+    return ex_key;
 }
 
 void AesCore::AddRoundKey(uint8_t block[16], uint8_t key[16]) {
