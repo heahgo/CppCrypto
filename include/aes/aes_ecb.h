@@ -1,8 +1,11 @@
 #pragma once
-#include "../aes/aes.h"
+#include "./aes.h"
 
-class Aes_ecb : public AesCore {
+class Aes_ecb : public Cipher {
     public:
-        uint8_t* Encrypt(uint8_t plain, uint32_t size);
-        uint8_t* Decrypt(uint8_t cipher, uint32_t size);
-}
+        AesCore aes_core_;
+        uint8_t* Encrypt(uint8_t* plain, uint32_t size);
+        uint8_t* Decrypt(uint8_t* cipher, uint32_t size);
+        Aes_ecb(uint8_t* key, uint8_t key_byte_size) : aes_core_(AesCore(key, key_byte_size)) {};
+        virtual ~Aes_ecb() { aes_core_.~AesCore(); };
+};
