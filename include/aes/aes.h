@@ -1,11 +1,11 @@
 #pragma once
-#include "../cipher.h"
 #include <iostream>
 #include <cstdlib>
 #include <cstring>
 #include <cstdint>
+#include "../cipher.h"
 
-class AesCore : public Cipher {
+class AesCore {
     private:
         uint8_t* ex_key_;
         uint8_t round_;
@@ -60,6 +60,7 @@ class AesCore : public Cipher {
         ~AesCore();
         void EncBlock(uint8_t block[16]);
         void DecBlock(uint8_t block[16]);
+        virtual uint8_t* Encrytion();
+        virtual uint8_t* Decrytion();
 };
-
 
