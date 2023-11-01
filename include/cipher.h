@@ -1,5 +1,7 @@
+#pragma once
+#include <cstdint>
+
 class Cipher {
-    public:
-        virtual void Encrypt() = 0;
-        virtual void Decrypt() = 0;
+    virtual uint8_t* Encrypt(uint8_t* cipher, uint32_t size) = 0;
+    virtual uint8_t* Decrypt(uint8_t* cipher, uint32_t size) = 0;
 };
