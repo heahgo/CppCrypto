@@ -60,7 +60,5 @@ class AesCore {
         ~AesCore();
         void EncBlock(uint8_t block[16]);
         void DecBlock(uint8_t block[16]);
-        virtual uint8_t* Encrytion();
-        virtual uint8_t* Decrytion();
 };
 
