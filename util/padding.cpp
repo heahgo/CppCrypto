@@ -4,7 +4,7 @@
 string pad(string data, uint32_t pad_size) {
     uint32_t data_size = data.size();
     uint8_t pad_byte = pad_size - data_size % pad_size;
-    string pad_data(data);//uint8_t* pad_data = new uint8_t[pad_size + pad_byte];
+    string pad_data(data);
     pad_data.resize(data_size + pad_byte);
     for (uint32_t i = 0; i < pad_byte; i++) 
         pad_data[data_size+i] = pad_byte;
