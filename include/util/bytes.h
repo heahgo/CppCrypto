@@ -19,6 +19,13 @@ class Bytes {
 
         Bytes() : bytes_(NULL), size_(0) {}
 
+        Bytes(uint8_t byte, uint32_t length) {
+            uint8_t* bytes = new uint8_t[length];
+            memset(bytes, byte, length);
+            bytes_ = bytes;
+            size_ = length;
+        }
+
         Bytes(uint8_t* bytes, uint32_t size) {
             bytes_ = new uint8_t[size];
             size_ = size;
