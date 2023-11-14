@@ -1,26 +1,24 @@
 #include "../include/util/padding.h"
+#include <iostream>
 // PKCS#7 Padding
 
-string pad(string data, uint32_t pad_size) {
-    uint32_t data_size = data.size();
-    uint8_t pad_byte = pad_size - data_size % pad_size;
-    string pad_data(data);
-    pad_data.resize(data_size + pad_byte);
-    for (uint32_t i = 0; i < pad_byte; i++) 
-        pad_data[data_size+i] = pad_byte;
-    return pad_data;
+Bytes Pad(Bytes& data, uint8_t pad_size) {
+    uint8_t pad_byte = pad_size - data.size() % 16;
+    Bytes padding(pad_byte, pad_byte);
+    return data + padding;
 }
 
-string unpad(string data, uint32_t pad_size) {
-    uint32_t data_size = data.size();
-    if (data_size % pad_size != 0)
-        throw std::length_error("unpad() Error : Incorrect data size");
-    uint8_t pad_byte = data[data_size-1];
-    for (uint32_t i = 1; i < pad_byte+1; i++) {
-        if (data[data_size-i] != pad_byte)
-            throw std::out_of_range("unpad() Error : Incorrect Padding");
+Bytes Unpad(Bytes& data, uint8_t pad_size) {
+    if (data.size() % pad_size != 0)
+        throw std::length_error("Unpad Error : Incorrect data size");
+        
+    uint8_t pad_byte = *(data.data() + data.size() - 1); 
+    for (uint8_t i = 0; i < pad_byte; i++) {
+        if (*(data.data() + data.size()-i-1) != pad_byte)
+            throw std::length_error("Unpad Error : Incorrect padding");
     }
-    string unpad_data(data);
-    unpad_data.resize(data_size - pad_byte);
-    return unpad_data;
+    uint8_t unpad_size = data.size()-pad_byte;
+    uint8_t* unpad_data = new uint8_t[unpad_size];
+    memcpy(unpad_data, data.data(), unpad_size);
+    return Bytes(unpad_data, unpad_size);
 }
