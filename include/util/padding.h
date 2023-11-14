@@ -1,8 +1,5 @@
 #pragma once
-#include <cstdint>
-#include <iostream>
+#include "./bytes.h"
 
-using std::string;
-
-string pad(string data, uint32_t pad_size);
-string unpad(string data, uint32_t pad_size);
+Bytes Pad(Bytes& data, uint8_t pad_size);
+Bytes Unpad(Bytes& data, uint8_t pad_size);
