@@ -1,7 +1,8 @@
 #pragma once
 #include <cstdint>
+#include "./util/bytes.h"
 
 class Cipher {
-    virtual void Encrypt(uint8_t* plain, uint8_t* cipher, uint32_t size) = 0;
-    virtual void Decrypt(uint8_t* cipher, uint8_t* plain, uint32_t size) = 0;
+    virtual Bytes Encrypt(Bytes& plain) = 0;
+    virtual Bytes Decrypt(Bytes& cipher) = 0;
 };

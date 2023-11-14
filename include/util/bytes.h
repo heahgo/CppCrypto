@@ -51,5 +51,4 @@ class Bytes {
             size_ = bytes.size_;
             return *this;
         }
-
 };
