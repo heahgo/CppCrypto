@@ -36,18 +36,20 @@ class Bytes {
             delete[] bytes_;
         }
 
-        Bytes operator+(Bytes& bytes) {
+        Bytes operator+(const Bytes& bytes) {
             uint8_t* result_bytes = new uint8_t[size_ + bytes.size_];
             memcpy(result_bytes, bytes_, size_);
             memcpy(result_bytes + size_, bytes.bytes_, bytes.size_);
             return Bytes(result_bytes, size_ + bytes.size_);
         }
 
-        Bytes& operator=(Bytes& bytes) {
+        Bytes& operator=(const Bytes& bytes) {
             delete[] bytes_;
-            bytes_ = new uint8_t[bytes.size_];
             size_ = bytes.size_;
+            bytes_ = new uint8_t[bytes.size_];
             memcpy(bytes_, bytes.bytes_, size_);
+            size_ = bytes.size_;
             return *this;
         }
+
 };
