@@ -15,9 +15,9 @@ uint8_t AesCore::Mult8(uint8_t x, uint8_t y) {
     return result & 0xff;
 }
 
-AesCore::AesCore(uint8_t* key, uint8_t key_byte_size) {
+AesCore::AesCore(Bytes& key) {
     uint8_t round = 0;
-
+    uint32_t key_byte_size = key.size();
     if (key_byte_size == 16) {
         round = 10;
     } else if (key_byte_size == 24) {
@@ -28,21 +28,22 @@ AesCore::AesCore(uint8_t* key, uint8_t key_byte_size) {
         throw std::length_error("Key Length is only used 128, 192, 256 bit!!");
     }
     round_ = round;
-    ex_key_ = KeyExpantion(key, key_byte_size, round);
+    ex_key_ = KeyExpantion(key, round);
 }
 
 AesCore::~AesCore() {
     delete[] ex_key_;
 }
 
-uint8_t* AesCore::KeyExpantion(uint8_t* key, uint8_t key_byte_size, uint8_t round) {
+uint8_t* AesCore::KeyExpantion(Bytes& key, uint8_t round) {
+    uint32_t key_byte_size = key.size();
     uint8_t rcon[] = {0x01, 0x02, 0x04, 0x08, 0x10, 0x20, 0x40, 0x80, 0x1b, 0x36};
     uint8_t* ex_key = new uint8_t[(round+1)*16];
     uint8_t nk =  key_byte_size >> 2;
     #define RotWord(dword) (dword>>8)&0xffffffff | (dword<<24)&0xffffffff
     #define XorWord(dword1, dword2) dword1 ^ dword2
     #define SubWord(dword) sbox[dword>>24]<<24 | sbox[(dword<<8)>>24]<<16 | sbox[(dword<<16)>>24]<<8 | sbox[(dword<<24)>>24]
-    memcpy(ex_key, key, nk*4);
+    memcpy(ex_key, key.data(), nk*4);
     for (uint8_t i = nk; i < (round+1)*4; i++) {
         uint32_t tmp, tmp2;
         memcpy(&tmp, ex_key+(i-1)*4, 4);

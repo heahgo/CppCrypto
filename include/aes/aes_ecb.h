@@ -6,6 +6,6 @@ class Aes_ecb : public Cipher {
         AesCore aes_core_;
         Bytes Encrypt(Bytes& plain);
         Bytes Decrypt(Bytes& cipher);
-        Aes_ecb(uint8_t* key, uint8_t key_byte_size) : aes_core_(AesCore(key, key_byte_size)) {}
+        Aes_ecb(Bytes key) : aes_core_(AesCore(key)) {}
         virtual ~Aes_ecb() {}
 };

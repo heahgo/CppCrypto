@@ -1,5 +1,4 @@
 #pragma once
-#include <cstdint>
 #include "./util/bytes.h"
 
 class Cipher {
