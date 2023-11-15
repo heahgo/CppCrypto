@@ -1,5 +1,5 @@
 #pragma once
-#include "./aes.h"
+#include "./aes_core.h"
 
 class Aes_ecb : public Cipher {
     public:
