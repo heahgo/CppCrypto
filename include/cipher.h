@@ -2,6 +2,7 @@
 #include "./util/bytes.h"
 
 class Cipher {
-    virtual Bytes Encrypt(Bytes& plain) = 0;
-    virtual Bytes Decrypt(Bytes& cipher) = 0;
+    public:
+        virtual Bytes Encrypt(Bytes& plain) {return Bytes();};
+        virtual Bytes Decrypt(Bytes& cipher) {return Bytes();};
 };
