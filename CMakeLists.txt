@@ -8,5 +8,6 @@ PROJECT(
     )
 
 add_subdirectory(crypto)
-add_subdirectory(app)
 add_subdirectory(util)
+add_subdirectory(app)
+
