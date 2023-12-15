@@ -1,4 +1,4 @@
-#include "../../include/aes/aes_core.h"
+#include "aes/aes_core.h"
 
 uint8_t AesCore::Mult8(uint8_t x, uint8_t y) {
     uint8_t result = 0;

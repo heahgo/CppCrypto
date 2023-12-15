@@ -1,4 +1,4 @@
-#include "../../include/aes/aes.h"
+#include "aes/aes.h"
 
 AES::AES(Bytes& key, uint8_t mode, Bytes iv) {
     if (mode == ECB_MODE) {

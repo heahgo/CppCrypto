@@ -1,4 +1,4 @@
-#include "../../include/aes/aes_ecb.h"
+#include "aes/aes_ecb.h"
 #include <cstdint>
 
 Bytes Aes_ecb::Encrypt(Bytes& plain) {
