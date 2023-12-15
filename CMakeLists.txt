@@ -7,8 +7,6 @@ PROJECT(
     DESCRIPTION "Implement Crypto Library in Cpp"
     )
 
-set(OUTPUT_DIR ${CMAKE_SOURCE_DIR}/app)
-
 add_subdirectory(crypto)
-add_subdirectory(include)
+add_subdirectory(app)
 add_subdirectory(util)
