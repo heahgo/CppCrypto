@@ -32,6 +32,14 @@ class Bytes {
             memcpy(bytes_, bytes, size);
         }
 
+        Bytes(string hex) {   // hex example : a1b2c3d4...
+            size_ = hex.length() / 2;                  
+            bytes_ = new uint8_t[size_];
+            for (uint32_t i = 0; i < size_; i++) {
+                bytes_[i] = stoul(hex.substr(i*2, 2), 0, 16);
+            }
+        }
+
         virtual ~Bytes() {
             delete[] bytes_;
         }
