@@ -1,6 +1,7 @@
 #pragma once
 #include <cstdint>
 #include <cstring>
+#include <string>
 
 class Bytes {
     private:
@@ -32,7 +33,7 @@ class Bytes {
             memcpy(bytes_, bytes, size);
         }
 
-        Bytes(string hex) {   // hex example : a1b2c3d4...
+        Bytes(std::string hex) {   // hex example : a1b2c3d4...
             size_ = hex.length() / 2;                  
             bytes_ = new uint8_t[size_];
             for (uint32_t i = 0; i < size_; i++) {
