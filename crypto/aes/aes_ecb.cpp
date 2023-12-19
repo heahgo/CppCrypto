@@ -2,7 +2,7 @@
 #include <cstdint>
 
 Bytes Aes_ecb::Encrypt(Bytes& plain) {
-    uint8_t size = plain.size();
+    uint32_t size = plain.size();
     if (size % 16 != 0)
         throw std::out_of_range("Encrypt Error : Incorrect plaintext length");
     uint8_t* cipher = new uint8_t[size];
@@ -15,7 +15,7 @@ Bytes Aes_ecb::Encrypt(Bytes& plain) {
 }
 
 Bytes Aes_ecb::Decrypt(Bytes& cipher) {
-    uint8_t size = cipher.size();
+    uint32_t size = cipher.size();
     if (size % 16 != 0)
         throw std::out_of_range("Decrypt Error : Incorrect ciphertext lengrh");
     uint8_t* plain = new uint8_t[size];
