@@ -4,6 +4,7 @@
 
 class AesCore {
     protected:
+        uint8_t block_size_ = 16;
         uint8_t* ex_key_;
         uint8_t round_;
         uint8_t sbox[256] = {
