@@ -4,7 +4,6 @@
 
 class AesCore {
     protected:
-        uint8_t block_size_ = 16;
         uint8_t* ex_key_;
         uint8_t round_;
         uint8_t sbox[256] = {
@@ -53,6 +52,7 @@ class AesCore {
         void SubBytes(uint8_t block[16]);
         void InvSubBytes(uint8_t block[16]);
     public:        
+        const uint8_t block_size_ = 16;
         AesCore(Bytes& key);
         ~AesCore();
         void EncBlock(uint8_t block[16]);
