@@ -39,8 +39,6 @@ AesTable::AesTable(Bytes& key) : AesCore(key) {
     }
 } 
 
-AesTable::~AesTable() {}
-
 void AesTable::EncBlock(uint8_t block[16]) {
     uint32_t a, b, c, d;
     for (uint8_t i = 0; i < round_-1; i++) {

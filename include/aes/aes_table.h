@@ -9,5 +9,5 @@ class AesTable : public AesCore {
     public:
         void EncBlock(uint8_t block[16]);
         AesTable(Bytes& key);
-        ~AesTable();
+        ~AesTable() {};
 };
