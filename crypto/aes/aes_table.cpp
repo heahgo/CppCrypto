@@ -1,4 +1,4 @@
-#include "../../include/aes/aes_table.h"
+#include "aes/aes_table.h"
 
 AesTable::AesTable(Bytes& key) : AesCore(key) {
     // T-boxes generation
