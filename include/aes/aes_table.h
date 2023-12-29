@@ -8,6 +8,7 @@ class AesTable : public AesCore {
         uint8_t xor_tables[16][16];
     public:
         void EncBlock(uint8_t block[16]);
+        // void DecBlock(uint8_t block[16]);
         AesTable(Bytes& key);
         ~AesTable() {};
 };

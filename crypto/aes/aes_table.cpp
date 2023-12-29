@@ -39,30 +39,54 @@ AesTable::AesTable(Bytes& key) : AesCore(key) {
     }
 } 
 
+
 void AesTable::EncBlock(uint8_t block[16]) {
-    uint32_t a, b, c, d;
-    for (uint8_t i = 0; i < round_-1; i++) {
+    uint8_t round_key[16];
+    AddRoundKey(block, ex_key_); 
+    for (uint8_t i = 1; i < round_; i++) {
+        memcpy(round_key, ex_key_+i*16, 16);
+        SubBytes(block);
         ShiftRows(block);
-        for (uint8_t j = 0; j < 4; j++) {
-            //t_boxes_ty_tables
-            a = t_boxes_ty_tables[0][i][j*4+0][block[j*4+0]];
-            b = t_boxes_ty_tables[1][i][j*4+1][block[j*4+1]];
-            c = t_boxes_ty_tables[2][i][j*4+2][block[j*4+2]];
-            d = t_boxes_ty_tables[3][i][j*4+3][block[j*4+3]];
-            //xor_tables
-            block[j*4+0] = (xor_tables[xor_tables[(a>>0)&0x0f][(b>>0)&0x0f]][xor_tables[(c>>0)&0x0f][(d>>0)&0x0f]]) |
-                            (xor_tables[xor_tables[(a>>4)&0x0f][(b>>4)&0x0f]][xor_tables[(c>>4)&0x0f][(d>>4)&0x0f]]<<4);
-            block[j*4+1] = (xor_tables[xor_tables[(a>>8)&0x0f][(b>>8)&0x0f]][xor_tables[(c>>8)&0x0f][(d>>8)&0x0f]]) |
-                            (xor_tables[xor_tables[(a>>12)&0x0f][(b>>12)&0x0f]][xor_tables[(c>>12)&0x0f][(d>>12)&0x0f]]<<4);
-            block[j*4+2] = (xor_tables[xor_tables[(a>>16)&0x0f][(b>>16)&0x0f]][xor_tables[(c>>16)&0x0f][(d>>16)&0x0f]]) |
-                            (xor_tables[xor_tables[(a>>20)&0x0f][(b>>20)&0x0f]][xor_tables[(c>>20)&0x0f][(d>>20)&0x0f]]<<4);
-            block[j*4+3] = (xor_tables[xor_tables[(a>>24)&0x0f][(b>>24)&0x0f]][xor_tables[(c>>24)&0x0f][(d>>24)&0x0f]]) |
-                            (xor_tables[xor_tables[(a>>28)&0x0f][(b>>28)&0x0f]][xor_tables[(c>>28)&0x0f][(d>>28)&0x0f]]<<4);
-        }
+        MixColumns(block);
+        AddRoundKey(block, round_key);
     }
+    memcpy(round_key, ex_key_+round_*16, 16);
+    SubBytes(block);
     ShiftRows(block);
-    //t_boxes
-    for (uint8_t i = 0; i < block_size_; i++) {
-        block[i] = t_boxes[round_-1][i][block[i]];
-    }
+    AddRoundKey(block, round_key);
 }
+
+// void AesTable::EncBlock(uint8_t block[16]) {
+//     uint32_t a, b, c, d;
+//     for (uint8_t i = 0; i < round_-1; i++) {
+//         ShiftRows(block);
+//         for (uint8_t i = 0; i < block_size_; i++) {
+//             block[i] = t_boxes[i][i][block[i]];
+//         }
+//         for (uint8_t j = 0; j < 4; j++) {
+//             //t_boxes_ty_tables
+//             a = t_boxes_ty_tables[0][i][j*4+0][block[j*4+0]];
+//             b = t_boxes_ty_tables[1][i][j*4+1][block[j*4+1]];
+//             c = t_boxes_ty_tables[2][i][j*4+2][block[j*4+2]];
+//             d = t_boxes_ty_tables[3][i][j*4+3][block[j*4+3]];
+//             //xor_tables
+//             block[j*4+0] = (xor_tables[xor_tables[(a>>0)&0x0f][(b>>0)&0x0f]][xor_tables[(c>>0)&0x0f][(d>>0)&0x0f]]) |
+//                             (xor_tables[xor_tables[(a>>4)&0x0f][(b>>4)&0x0f]][xor_tables[(c>>4)&0x0f][(d>>4)&0x0f]]<<4);
+//             block[j*4+1] = (xor_tables[xor_tables[(a>>8)&0x0f][(b>>8)&0x0f]][xor_tables[(c>>8)&0x0f][(d>>8)&0x0f]]) |
+//                             (xor_tables[xor_tables[(a>>12)&0x0f][(b>>12)&0x0f]][xor_tables[(c>>12)&0x0f][(d>>12)&0x0f]]<<4);
+//             block[j*4+2] = (xor_tables[xor_tables[(a>>16)&0x0f][(b>>16)&0x0f]][xor_tables[(c>>16)&0x0f][(d>>16)&0x0f]]) |
+//                             (xor_tables[xor_tables[(a>>20)&0x0f][(b>>20)&0x0f]][xor_tables[(c>>20)&0x0f][(d>>20)&0x0f]]<<4);
+//             block[j*4+3] = (xor_tables[xor_tables[(a>>24)&0x0f][(b>>24)&0x0f]][xor_tables[(c>>24)&0x0f][(d>>24)&0x0f]]) |
+//                             (xor_tables[xor_tables[(a>>28)&0x0f][(b>>28)&0x0f]][xor_tables[(c>>28)&0x0f][(d>>28)&0x0f]]<<4);
+//         }
+//     }
+//     ShiftRows(block);
+//     // t_boxes
+//     for (uint8_t i = 0; i < block_size_; i++) {
+//         block[i] = t_boxes[round_-1][i][block[i]];
+//     }
+// }
+
+// void DecBlock(uint8_t block[16]) {
+//     AesCore::DecBlock(block);
+// }
