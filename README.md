@@ -26,4 +26,7 @@ make
 ```
 cd ../app/bin
 ./aes_test
+./table_test
+./speed
+
 ```
