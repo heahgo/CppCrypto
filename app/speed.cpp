@@ -19,14 +19,16 @@ Bytes KeyGen(uint32_t size) {
 
 int main() {
     time_t start, end;
-    std::ifstream texts("../../app/aes_test/speed/plaintext.txt");
     std::string text;
     Bytes t;
     Bytes key = KeyGen(128);
     AES aes(key, ECB_MODE);
     AES_T aes_t(key, ECB_MODE);
 
-    //AES test
+    std::ifstream texts;
+
+    // AES Encrypt test
+    texts = std::ifstream("../../app/aes_test/speed/plaintext.txt");
     start = clock();
     for (uint32_t i = 0; i < 100000; i++) {
         getline(texts, text);
@@ -34,8 +36,9 @@ int main() {
         aes.Encrypt(t);
     }
     end = clock();
-    printf("AES-ECB-128: %f s\n", (double)(end-start) / CLOCKS_PER_SEC);
-    // AES_T test
+    printf("AES-ECB-128 Encryption 100000 plaintext: %fs\n", (double)(end-start) / CLOCKS_PER_SEC);
+    // AES_T Encrypt test
+    texts = std::ifstream("../../app/aes_test/speed/plaintext.txt");
     start = clock();
     for (uint32_t i = 0; i < 100000; i++) {
         getline(texts, text);
@@ -43,6 +46,26 @@ int main() {
         aes_t.Encrypt(t);
     }
     end = clock();
-    printf("AES_T-ECB-128: %f s\n", (double)(end-start) / CLOCKS_PER_SEC);
+    printf("AES_T-ECB-128 Encryption 100000 plaintext: %fs\n", (double)(end-start) / CLOCKS_PER_SEC);
 
+    // AES Decrypt test
+    texts = std::ifstream("../../app/aes_test/speed/plaintext.txt");
+    start = clock();
+    for (uint32_t i = 0; i < 100000; i++) {
+        getline(texts, text);
+        t = Bytes(text);
+        aes.Decrypt(t);
+    }
+    end = clock();
+    printf("AES-ECB-128 Decryption 100000 plaintext: %fs\n", (double)(end-start) / CLOCKS_PER_SEC);
+    // AES_T Decrypt test
+    texts = std::ifstream("../../app/aes_test/speed/plaintext.txt");
+    start = clock();
+    for (uint32_t i = 0; i < 100000; i++) {
+        getline(texts, text);
+        t = Bytes(text);
+        aes_t.Decrypt(t);
+    }
+    end = clock();
+    printf("AES_T-ECB-128 Decryption 100000 plaintext: %fs\n", (double)(end-start) / CLOCKS_PER_SEC);
 }
