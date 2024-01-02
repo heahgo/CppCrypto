@@ -26,7 +26,7 @@ bool Compare(Bytes &a, Bytes &b) {
 }
 
 void Test(ifstream &test) {
-    Bytes k, p,c ;
+    Bytes k, p, c, p_tmp, c_tmp;
     string key, plaintext, ciphertext;
     getline(test, key);
     k = Bytes(key);
@@ -36,9 +36,13 @@ void Test(ifstream &test) {
         getline(test, ciphertext);
         p = Bytes(plaintext);
         c = Bytes(ciphertext);
+        p_tmp = p;
+        c_tmp = c;
         p = Pad(p, 16);
         p = aes.Encrypt(p);
-        if (!Compare(p,  c)) {
+        c_tmp = aes.Decrypt(c_tmp);
+        c_tmp = Unpad(c_tmp, 16);
+        if (!Compare(p,  c) || !Compare(p_tmp, c_tmp)) {
             printf("AES-ECB-%u Test Failed\n", k.size()*8);
             return;
         }
