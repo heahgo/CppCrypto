@@ -158,11 +158,16 @@ void AesCore::MixColumns(uint8_t block[16]) {
         uint8_t tmp1 = block[i*4+1];
         uint8_t tmp2 = block[i*4+2];
         uint8_t tmp3 = block[i*4+3];
+        // block[i*4+0] = Mult8(tmp0,0x02)^Mult8(tmp1,0x03)^Mult8(tmp2,0x01)^Mult8(tmp3,0x01);
+        // block[i*4+1] = Mult8(tmp0,0x01)^Mult8(tmp1,0x02)^Mult8(tmp2,0x03)^Mult8(tmp3,0x01);
+        // block[i*4+2] = Mult8(tmp0,0x01)^Mult8(tmp1,0x01)^Mult8(tmp2,0x02)^Mult8(tmp3,0x03);
+        // block[i*4+3] = Mult8(tmp0,0x03)^Mult8(tmp1,0x01)^Mult8(tmp2,0x01)^Mult8(tmp3,0x02);
 
-        block[i*4+0] = Mult8(tmp0,0x02)^Mult8(tmp1,0x03)^Mult8(tmp2,0x01)^Mult8(tmp3,0x01);
-        block[i*4+1] = Mult8(tmp0,0x01)^Mult8(tmp1,0x02)^Mult8(tmp2,0x03)^Mult8(tmp3,0x01);
-        block[i*4+2] = Mult8(tmp0,0x01)^Mult8(tmp1,0x01)^Mult8(tmp2,0x02)^Mult8(tmp3,0x03);
-        block[i*4+3] = Mult8(tmp0,0x03)^Mult8(tmp1,0x01)^Mult8(tmp2,0x01)^Mult8(tmp3,0x02);
+        // 0x01 : gmul[0], 0x02 : gmul[1], 0x03 : gmul[2]
+        block[i*4+0] = gmul[1][tmp0]^gmul[2][tmp1]^gmul[0][tmp2]^gmul[0][tmp3];
+        block[i*4+1] = gmul[0][tmp0]^gmul[1][tmp1]^gmul[2][tmp2]^gmul[0][tmp3];
+        block[i*4+2] = gmul[0][tmp0]^gmul[0][tmp1]^gmul[1][tmp2]^gmul[2][tmp3];
+        block[i*4+3] = gmul[2][tmp0]^gmul[0][tmp1]^gmul[0][tmp2]^gmul[1][tmp3];
     }
 }
 
@@ -185,11 +190,16 @@ void AesCore::InvMixColumns(uint8_t block[16]) {
         uint8_t tmp1 = block[i*4+1];
         uint8_t tmp2 = block[i*4+2];
         uint8_t tmp3 = block[i*4+3];
+        // block[i*4+0] = Mult8(tmp0,0x0E)^Mult8(tmp1,0x0B)^Mult8(tmp2,0x0D)^Mult8(tmp3,0x09);
+        // block[i*4+1] = Mult8(tmp0,0x09)^Mult8(tmp1,0x0E)^Mult8(tmp2,0x0B)^Mult8(tmp3,0x0D);
+        // block[i*4+2] = Mult8(tmp0,0x0D)^Mult8(tmp1,0x09)^Mult8(tmp2,0x0E)^Mult8(tmp3,0x0B);
+        // block[i*4+3] = Mult8(tmp0,0x0B)^Mult8(tmp1,0x0D)^Mult8(tmp2,0x09)^Mult8(tmp3,0x0E);
 
-        block[i*4+0] = Mult8(tmp0,0x0E)^Mult8(tmp1,0x0B)^Mult8(tmp2,0x0D)^Mult8(tmp3,0x09);
-        block[i*4+1] = Mult8(tmp0,0x09)^Mult8(tmp1,0x0E)^Mult8(tmp2,0x0B)^Mult8(tmp3,0x0D);
-        block[i*4+2] = Mult8(tmp0,0x0D)^Mult8(tmp1,0x09)^Mult8(tmp2,0x0E)^Mult8(tmp3,0x0B);
-        block[i*4+3] = Mult8(tmp0,0x0B)^Mult8(tmp1,0x0D)^Mult8(tmp2,0x09)^Mult8(tmp3,0x0E);
+        // 0x09 : inv_gmul[0], 0x0B : inv_gmul[1], 0x0D : inv_gmul[2], 0x0E : inv_gmul[3]
+        block[i*4+0] = inv_gmul[3][tmp0]^inv_gmul[1][tmp1]^inv_gmul[2][tmp2]^inv_gmul[0][tmp3];
+        block[i*4+1] = inv_gmul[0][tmp0]^inv_gmul[3][tmp1]^inv_gmul[1][tmp2]^inv_gmul[2][tmp3];
+        block[i*4+2] = inv_gmul[2][tmp0]^inv_gmul[0][tmp1]^inv_gmul[3][tmp2]^inv_gmul[1][tmp3];
+        block[i*4+3] = inv_gmul[1][tmp0]^inv_gmul[2][tmp1]^inv_gmul[0][tmp2]^inv_gmul[3][tmp3];
     }
 }
 
