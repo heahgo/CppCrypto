@@ -30,42 +30,42 @@ int main() {
     // AES Encrypt test
     texts = std::ifstream("../../app/aes_test/speed/plaintext.txt");
     start = clock();
-    for (uint32_t i = 0; i < 100000; i++) {
+    for (uint32_t i = 0; i < 1000000; i++) {
         getline(texts, text);
         t = Bytes(text);
         aes.Encrypt(t);
     }
     end = clock();
-    printf("AES-ECB-128 Encryption 100000 plaintext: %fs\n", (double)(end-start) / CLOCKS_PER_SEC);
+    printf("AES-ECB-128 Encryption 1000000 plaintext(64 Bytes): %fs\n", (double)(end-start) / CLOCKS_PER_SEC);
     // AES_T Encrypt test
     texts = std::ifstream("../../app/aes_test/speed/plaintext.txt");
     start = clock();
-    for (uint32_t i = 0; i < 100000; i++) {
+    for (uint32_t i = 0; i < 1000000; i++) {
         getline(texts, text);
         t = Bytes(text);
         aes_t.Encrypt(t);
     }
     end = clock();
-    printf("AES_T-ECB-128 Encryption 100000 plaintext: %fs\n", (double)(end-start) / CLOCKS_PER_SEC);
+    printf("AES_T-ECB-128 Encryption 1000000 plaintext(64 Bytes): %fs\n", (double)(end-start) / CLOCKS_PER_SEC);
 
     // AES Decrypt test
     texts = std::ifstream("../../app/aes_test/speed/plaintext.txt");
     start = clock();
-    for (uint32_t i = 0; i < 100000; i++) {
+    for (uint32_t i = 0; i < 1000000; i++) {
         getline(texts, text);
         t = Bytes(text);
         aes.Decrypt(t);
     }
     end = clock();
-    printf("AES-ECB-128 Decryption 100000 plaintext: %fs\n", (double)(end-start) / CLOCKS_PER_SEC);
+    printf("AES-ECB-128 Decryption 1000000 plaintext(64 Bytes): %fs\n", (double)(end-start) / CLOCKS_PER_SEC);
     // AES_T Decrypt test
     texts = std::ifstream("../../app/aes_test/speed/plaintext.txt");
     start = clock();
-    for (uint32_t i = 0; i < 100000; i++) {
+    for (uint32_t i = 0; i < 1000000; i++) {
         getline(texts, text);
         t = Bytes(text);
         aes_t.Decrypt(t);
     }
     end = clock();
-    printf("AES_T-ECB-128 Decryption 100000 plaintext: %fs\n", (double)(end-start) / CLOCKS_PER_SEC);
+    printf("AES_T-ECB-128 Decryption 1000000 plaintext(64 Bytes): %fs\n", (double)(end-start) / CLOCKS_PER_SEC);
 }
