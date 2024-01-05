@@ -117,16 +117,16 @@ AesTable::AesTable(Bytes& key) : AesCore(key) {
         }
     }
     // Memory allocation for xor_tables
-    xor_tables = new uint8_t*[16];
-    for (uint8_t i = 0; i < 16; i++) {
-        xor_tables[i] = new uint8_t[16];
-    }
-    // XOR-tables generation
-    for (uint8_t i = 0; i < 16; i++) {
-        for (uint8_t j = 0; j < 16; j++) {
-            xor_tables[i][j] = i ^ j;
-        }
-    }
+    // xor_tables = new uint8_t*[16];
+    // for (uint8_t i = 0; i < 16; i++) {
+    //     xor_tables[i] = new uint8_t[16];
+    // }
+    // // XOR-tables generation
+    // for (uint8_t i = 0; i < 16; i++) {
+    //     for (uint8_t j = 0; j < 16; j++) {
+    //         xor_tables[i][j] = i ^ j;
+    //     }
+    // }
 } 
 AesTable::~AesTable() {
     // Memory deallocation for t_boxes
@@ -177,10 +177,10 @@ AesTable::~AesTable() {
     }
     delete[] inv_t_boxes_ty_tables;
     // Memory deallocation for xor_tables
-    for (uint8_t i = 0; i < 16; i++) {
-        delete[] xor_tables[i];
-    }
-    delete[] xor_tables;
+    // for (uint8_t i = 0; i < 16; i++) {
+    //     delete[] xor_tables[i];
+    // }
+    // delete[] xor_tables;
 }
 
 // void AesTable::EncBlock(uint8_t block[16]) {
@@ -201,24 +201,28 @@ AesTable::~AesTable() {
 // }
 
 void AesTable::EncBlock(uint8_t block[16]) {
-    uint32_t a, b, c, d;
+    uint32_t mixcol;
     for (uint8_t r = 0; r < round_-1; r++) {
         ShiftRows(block);
         for (uint8_t j = 0; j < 4; j++) {
             //t_boxes_ty_tables
-            a = t_boxes_ty_tables[0][r][j*4+0][block[j*4+0]];
-            b = t_boxes_ty_tables[1][r][j*4+1][block[j*4+1]];
-            c = t_boxes_ty_tables[2][r][j*4+2][block[j*4+2]];
-            d = t_boxes_ty_tables[3][r][j*4+3][block[j*4+3]];
-            //xor_tables
-            block[j*4+3] = (xor_tables[xor_tables[(a>>0)&0x0f][(b>>0)&0x0f]][xor_tables[(c>>0)&0x0f][(d>>0)&0x0f]]) |
-                            (xor_tables[xor_tables[(a>>4)&0x0f][(b>>4)&0x0f]][xor_tables[(c>>4)&0x0f][(d>>4)&0x0f]]<<4);
-            block[j*4+2] = (xor_tables[xor_tables[(a>>8)&0x0f][(b>>8)&0x0f]][xor_tables[(c>>8)&0x0f][(d>>8)&0x0f]]) |
-                            (xor_tables[xor_tables[(a>>12)&0x0f][(b>>12)&0x0f]][xor_tables[(c>>12)&0x0f][(d>>12)&0x0f]]<<4);
-            block[j*4+1] = (xor_tables[xor_tables[(a>>16)&0x0f][(b>>16)&0x0f]][xor_tables[(c>>16)&0x0f][(d>>16)&0x0f]]) |
-                            (xor_tables[xor_tables[(a>>20)&0x0f][(b>>20)&0x0f]][xor_tables[(c>>20)&0x0f][(d>>20)&0x0f]]<<4);
-            block[j*4+0] = (xor_tables[xor_tables[(a>>24)&0x0f][(b>>24)&0x0f]][xor_tables[(c>>24)&0x0f][(d>>24)&0x0f]]) |
-                            (xor_tables[xor_tables[(a>>28)&0x0f][(b>>28)&0x0f]][xor_tables[(c>>28)&0x0f][(d>>28)&0x0f]]<<4);
+            mixcol = t_boxes_ty_tables[0][r][j*4+0][block[j*4+0]] ^ 
+                    t_boxes_ty_tables[1][r][j*4+1][block[j*4+1]] ^
+                    t_boxes_ty_tables[2][r][j*4+2][block[j*4+2]] ^
+                    t_boxes_ty_tables[3][r][j*4+3][block[j*4+3]];
+            //xor_tables -> so slow
+            // block[j*4+3] = (xor_tables[xor_tables[(a>>0)&0x0f][(b>>0)&0x0f]][xor_tables[(c>>0)&0x0f][(d>>0)&0x0f]]) |
+            //                 (xor_tables[xor_tables[(a>>4)&0x0f][(b>>4)&0x0f]][xor_tables[(c>>4)&0x0f][(d>>4)&0x0f]]<<4);
+            // block[j*4+2] = (xor_tables[xor_tables[(a>>8)&0x0f][(b>>8)&0x0f]][xor_tables[(c>>8)&0x0f][(d>>8)&0x0f]]) |
+            //                 (xor_tables[xor_tables[(a>>12)&0x0f][(b>>12)&0x0f]][xor_tables[(c>>12)&0x0f][(d>>12)&0x0f]]<<4);
+            // block[j*4+1] = (xor_tables[xor_tables[(a>>16)&0x0f][(b>>16)&0x0f]][xor_tables[(c>>16)&0x0f][(d>>16)&0x0f]]) |
+            //                 (xor_tables[xor_tables[(a>>20)&0x0f][(b>>20)&0x0f]][xor_tables[(c>>20)&0x0f][(d>>20)&0x0f]]<<4);
+            // block[j*4+0] = (xor_tables[xor_tables[(a>>24)&0x0f][(b>>24)&0x0f]][xor_tables[(c>>24)&0x0f][(d>>24)&0x0f]]) |
+            //                 (xor_tables[xor_tables[(a>>28)&0x0f][(b>>28)&0x0f]][xor_tables[(c>>28)&0x0f][(d>>28)&0x0f]]<<4);
+            block[j*4+3] = (mixcol>>0)&0x0ff;
+            block[j*4+2] = (mixcol>>8)&0x0ff;
+            block[j*4+1] = (mixcol>>16)&0x0ff;
+            block[j*4+0] = (mixcol>>24)&0x0ff;
         }
     }
     ShiftRows(block);
@@ -250,24 +254,28 @@ void AesTable::EncBlock(uint8_t block[16]) {
 // }
 
 void AesTable::DecBlock(uint8_t block[16]) {
-    uint32_t a, b, c, d;
+    uint32_t mixcol;
     for (uint8_t r = 0; r < round_-1; r++) {
         InvShiftRows(block);
         for (uint8_t j = 0; j < 4; j++) {
             //inv_t_boxes_ty_tables
-            a = inv_t_boxes_ty_tables[0][r][j*4+0][block[j*4+0]];
-            b = inv_t_boxes_ty_tables[1][r][j*4+1][block[j*4+1]];
-            c = inv_t_boxes_ty_tables[2][r][j*4+2][block[j*4+2]];
-            d = inv_t_boxes_ty_tables[3][r][j*4+3][block[j*4+3]];
-            //xor_tables
-            block[j*4+3] = (xor_tables[xor_tables[(a>>0)&0x0f][(b>>0)&0x0f]][xor_tables[(c>>0)&0x0f][(d>>0)&0x0f]]) |
-                            (xor_tables[xor_tables[(a>>4)&0x0f][(b>>4)&0x0f]][xor_tables[(c>>4)&0x0f][(d>>4)&0x0f]]<<4);
-            block[j*4+2] = (xor_tables[xor_tables[(a>>8)&0x0f][(b>>8)&0x0f]][xor_tables[(c>>8)&0x0f][(d>>8)&0x0f]]) |
-                            (xor_tables[xor_tables[(a>>12)&0x0f][(b>>12)&0x0f]][xor_tables[(c>>12)&0x0f][(d>>12)&0x0f]]<<4);
-            block[j*4+1] = (xor_tables[xor_tables[(a>>16)&0x0f][(b>>16)&0x0f]][xor_tables[(c>>16)&0x0f][(d>>16)&0x0f]]) |
-                            (xor_tables[xor_tables[(a>>20)&0x0f][(b>>20)&0x0f]][xor_tables[(c>>20)&0x0f][(d>>20)&0x0f]]<<4);
-            block[j*4+0] = (xor_tables[xor_tables[(a>>24)&0x0f][(b>>24)&0x0f]][xor_tables[(c>>24)&0x0f][(d>>24)&0x0f]]) |
-                            (xor_tables[xor_tables[(a>>28)&0x0f][(b>>28)&0x0f]][xor_tables[(c>>28)&0x0f][(d>>28)&0x0f]]<<4);
+            mixcol = inv_t_boxes_ty_tables[0][r][j*4+0][block[j*4+0]] ^ 
+                    inv_t_boxes_ty_tables[1][r][j*4+1][block[j*4+1]] ^
+                    inv_t_boxes_ty_tables[2][r][j*4+2][block[j*4+2]] ^
+                    inv_t_boxes_ty_tables[3][r][j*4+3][block[j*4+3]];
+            //xor_tables -> so slow
+            // block[j*4+3] = (xor_tables[xor_tables[(a>>0)&0x0f][(b>>0)&0x0f]][xor_tables[(c>>0)&0x0f][(d>>0)&0x0f]]) |
+            //                 (xor_tables[xor_tables[(a>>4)&0x0f][(b>>4)&0x0f]][xor_tables[(c>>4)&0x0f][(d>>4)&0x0f]]<<4);
+            // block[j*4+2] = (xor_tables[xor_tables[(a>>8)&0x0f][(b>>8)&0x0f]][xor_tables[(c>>8)&0x0f][(d>>8)&0x0f]]) |
+            //                 (xor_tables[xor_tables[(a>>12)&0x0f][(b>>12)&0x0f]][xor_tables[(c>>12)&0x0f][(d>>12)&0x0f]]<<4);
+            // block[j*4+1] = (xor_tables[xor_tables[(a>>16)&0x0f][(b>>16)&0x0f]][xor_tables[(c>>16)&0x0f][(d>>16)&0x0f]]) |
+            //                 (xor_tables[xor_tables[(a>>20)&0x0f][(b>>20)&0x0f]][xor_tables[(c>>20)&0x0f][(d>>20)&0x0f]]<<4);
+            // block[j*4+0] = (xor_tables[xor_tables[(a>>24)&0x0f][(b>>24)&0x0f]][xor_tables[(c>>24)&0x0f][(d>>24)&0x0f]]) |
+            //                 (xor_tables[xor_tables[(a>>28)&0x0f][(b>>28)&0x0f]][xor_tables[(c>>28)&0x0f][(d>>28)&0x0f]]<<4);
+            block[j*4+3] = (mixcol>>0)&0x0ff;
+            block[j*4+2] = (mixcol>>8)&0x0ff;
+            block[j*4+1] = (mixcol>>16)&0x0ff;
+            block[j*4+0] = (mixcol>>24)&0x0ff;
         }
     }
     InvShiftRows(block);
