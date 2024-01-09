@@ -86,7 +86,6 @@ AesTable::AesTable(Bytes& key) : AesCore(key) {
         }
     }
     // t_boxes_ty_tables generation
-    inv_t_boxes_ty_tables = new uint32_t***[4];
     for (uint8_t i = 0; i < 4; i++) {
         for (uint8_t r = 0; r < round_-1; r++) {   
             for (uint8_t j = 0; j < block_size_; j++) {
@@ -97,6 +96,7 @@ AesTable::AesTable(Bytes& key) : AesCore(key) {
         }
     }
     // Memory allocation for inv_t_boxes_ty_tables
+    inv_t_boxes_ty_tables = new uint32_t***[4];
     for (uint8_t i = 0; i < 4; i++) {
         inv_t_boxes_ty_tables[i] = new uint32_t**[round_-1];
         for (uint8_t r = 0; r < round_-1; r++) {
