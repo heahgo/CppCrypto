@@ -210,6 +210,10 @@ void AesTable::EncBlock(uint8_t block[16]) {
                     t_boxes_ty_tables[1][r][j*4+1][block[j*4+1]] ^
                     t_boxes_ty_tables[2][r][j*4+2][block[j*4+2]] ^
                     t_boxes_ty_tables[3][r][j*4+3][block[j*4+3]];
+            block[j*4+3] = (mixcol>>0)&0x0ff;
+            block[j*4+2] = (mixcol>>8)&0x0ff;
+            block[j*4+1] = (mixcol>>16)&0x0ff;
+            block[j*4+0] = (mixcol>>24)&0x0ff;
             //xor_tables -> so slow
             // block[j*4+3] = (xor_tables[xor_tables[(a>>0)&0x0f][(b>>0)&0x0f]][xor_tables[(c>>0)&0x0f][(d>>0)&0x0f]]) |
             //                 (xor_tables[xor_tables[(a>>4)&0x0f][(b>>4)&0x0f]][xor_tables[(c>>4)&0x0f][(d>>4)&0x0f]]<<4);
@@ -219,10 +223,6 @@ void AesTable::EncBlock(uint8_t block[16]) {
             //                 (xor_tables[xor_tables[(a>>20)&0x0f][(b>>20)&0x0f]][xor_tables[(c>>20)&0x0f][(d>>20)&0x0f]]<<4);
             // block[j*4+0] = (xor_tables[xor_tables[(a>>24)&0x0f][(b>>24)&0x0f]][xor_tables[(c>>24)&0x0f][(d>>24)&0x0f]]) |
             //                 (xor_tables[xor_tables[(a>>28)&0x0f][(b>>28)&0x0f]][xor_tables[(c>>28)&0x0f][(d>>28)&0x0f]]<<4);
-            block[j*4+3] = (mixcol>>0)&0x0ff;
-            block[j*4+2] = (mixcol>>8)&0x0ff;
-            block[j*4+1] = (mixcol>>16)&0x0ff;
-            block[j*4+0] = (mixcol>>24)&0x0ff;
         }
     }
     ShiftRows(block);
@@ -263,6 +263,10 @@ void AesTable::DecBlock(uint8_t block[16]) {
                     inv_t_boxes_ty_tables[1][r][j*4+1][block[j*4+1]] ^
                     inv_t_boxes_ty_tables[2][r][j*4+2][block[j*4+2]] ^
                     inv_t_boxes_ty_tables[3][r][j*4+3][block[j*4+3]];
+            block[j*4+3] = (mixcol>>0)&0x0ff;
+            block[j*4+2] = (mixcol>>8)&0x0ff;
+            block[j*4+1] = (mixcol>>16)&0x0ff;
+            block[j*4+0] = (mixcol>>24)&0x0ff;
             //xor_tables -> so slow
             // block[j*4+3] = (xor_tables[xor_tables[(a>>0)&0x0f][(b>>0)&0x0f]][xor_tables[(c>>0)&0x0f][(d>>0)&0x0f]]) |
             //                 (xor_tables[xor_tables[(a>>4)&0x0f][(b>>4)&0x0f]][xor_tables[(c>>4)&0x0f][(d>>4)&0x0f]]<<4);
@@ -272,10 +276,6 @@ void AesTable::DecBlock(uint8_t block[16]) {
             //                 (xor_tables[xor_tables[(a>>20)&0x0f][(b>>20)&0x0f]][xor_tables[(c>>20)&0x0f][(d>>20)&0x0f]]<<4);
             // block[j*4+0] = (xor_tables[xor_tables[(a>>24)&0x0f][(b>>24)&0x0f]][xor_tables[(c>>24)&0x0f][(d>>24)&0x0f]]) |
             //                 (xor_tables[xor_tables[(a>>28)&0x0f][(b>>28)&0x0f]][xor_tables[(c>>28)&0x0f][(d>>28)&0x0f]]<<4);
-            block[j*4+3] = (mixcol>>0)&0x0ff;
-            block[j*4+2] = (mixcol>>8)&0x0ff;
-            block[j*4+1] = (mixcol>>16)&0x0ff;
-            block[j*4+0] = (mixcol>>24)&0x0ff;
         }
     }
     InvShiftRows(block);
