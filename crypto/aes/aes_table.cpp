@@ -214,15 +214,6 @@ void AesTable::EncBlock(uint8_t block[16]) {
             block[j*4+2] = (mixcol>>8)&0x0ff;
             block[j*4+1] = (mixcol>>16)&0x0ff;
             block[j*4+0] = (mixcol>>24)&0x0ff;
-            //xor_tables -> so slow
-            // block[j*4+3] = (xor_tables[xor_tables[(a>>0)&0x0f][(b>>0)&0x0f]][xor_tables[(c>>0)&0x0f][(d>>0)&0x0f]]) |
-            //                 (xor_tables[xor_tables[(a>>4)&0x0f][(b>>4)&0x0f]][xor_tables[(c>>4)&0x0f][(d>>4)&0x0f]]<<4);
-            // block[j*4+2] = (xor_tables[xor_tables[(a>>8)&0x0f][(b>>8)&0x0f]][xor_tables[(c>>8)&0x0f][(d>>8)&0x0f]]) |
-            //                 (xor_tables[xor_tables[(a>>12)&0x0f][(b>>12)&0x0f]][xor_tables[(c>>12)&0x0f][(d>>12)&0x0f]]<<4);
-            // block[j*4+1] = (xor_tables[xor_tables[(a>>16)&0x0f][(b>>16)&0x0f]][xor_tables[(c>>16)&0x0f][(d>>16)&0x0f]]) |
-            //                 (xor_tables[xor_tables[(a>>20)&0x0f][(b>>20)&0x0f]][xor_tables[(c>>20)&0x0f][(d>>20)&0x0f]]<<4);
-            // block[j*4+0] = (xor_tables[xor_tables[(a>>24)&0x0f][(b>>24)&0x0f]][xor_tables[(c>>24)&0x0f][(d>>24)&0x0f]]) |
-            //                 (xor_tables[xor_tables[(a>>28)&0x0f][(b>>28)&0x0f]][xor_tables[(c>>28)&0x0f][(d>>28)&0x0f]]<<4);
         }
     }
     ShiftRows(block);
@@ -267,15 +258,6 @@ void AesTable::DecBlock(uint8_t block[16]) {
             block[j*4+2] = (mixcol>>8)&0x0ff;
             block[j*4+1] = (mixcol>>16)&0x0ff;
             block[j*4+0] = (mixcol>>24)&0x0ff;
-            //xor_tables -> so slow
-            // block[j*4+3] = (xor_tables[xor_tables[(a>>0)&0x0f][(b>>0)&0x0f]][xor_tables[(c>>0)&0x0f][(d>>0)&0x0f]]) |
-            //                 (xor_tables[xor_tables[(a>>4)&0x0f][(b>>4)&0x0f]][xor_tables[(c>>4)&0x0f][(d>>4)&0x0f]]<<4);
-            // block[j*4+2] = (xor_tables[xor_tables[(a>>8)&0x0f][(b>>8)&0x0f]][xor_tables[(c>>8)&0x0f][(d>>8)&0x0f]]) |
-            //                 (xor_tables[xor_tables[(a>>12)&0x0f][(b>>12)&0x0f]][xor_tables[(c>>12)&0x0f][(d>>12)&0x0f]]<<4);
-            // block[j*4+1] = (xor_tables[xor_tables[(a>>16)&0x0f][(b>>16)&0x0f]][xor_tables[(c>>16)&0x0f][(d>>16)&0x0f]]) |
-            //                 (xor_tables[xor_tables[(a>>20)&0x0f][(b>>20)&0x0f]][xor_tables[(c>>20)&0x0f][(d>>20)&0x0f]]<<4);
-            // block[j*4+0] = (xor_tables[xor_tables[(a>>24)&0x0f][(b>>24)&0x0f]][xor_tables[(c>>24)&0x0f][(d>>24)&0x0f]]) |
-            //                 (xor_tables[xor_tables[(a>>28)&0x0f][(b>>28)&0x0f]][xor_tables[(c>>28)&0x0f][(d>>28)&0x0f]]<<4);
         }
     }
     InvShiftRows(block);
