@@ -36,7 +36,7 @@ int main() {
         aes.Encrypt(t);
     }
     end = clock();
-    printf("AES-ECB-128 Encryption 1000000 plaintext(64 Bytes): %fs\n", (double)(end-start) / CLOCKS_PER_SEC);
+    printf("AES-128 ECB Encryption 1000000 plaintext(64 Bytes): %fs\n", (double)(end-start) / CLOCKS_PER_SEC);
     // AES_T Encrypt test
     texts = std::ifstream("../../app/aes_test/speed/plaintext.txt");
     start = clock();
@@ -46,7 +46,7 @@ int main() {
         aes_t.Encrypt(t);
     }
     end = clock();
-    printf("AES_T-ECB-128 Encryption 1000000 plaintext(64 Bytes): %fs\n", (double)(end-start) / CLOCKS_PER_SEC);
+    printf("AES-128-TALBE ECB Encryption 1000000 plaintext(64 Bytes): %fs\n", (double)(end-start) / CLOCKS_PER_SEC);
 
     // AES Decrypt test
     texts = std::ifstream("../../app/aes_test/speed/plaintext.txt");
@@ -57,7 +57,7 @@ int main() {
         aes.Decrypt(t);
     }
     end = clock();
-    printf("AES-ECB-128 Decryption 1000000 plaintext(64 Bytes): %fs\n", (double)(end-start) / CLOCKS_PER_SEC);
+    printf("AES-128 ECB Decryption 1000000 plaintext(64 Bytes): %fs\n", (double)(end-start) / CLOCKS_PER_SEC);
     // AES_T Decrypt test
     texts = std::ifstream("../../app/aes_test/speed/plaintext.txt");
     start = clock();
@@ -67,5 +67,5 @@ int main() {
         aes_t.Decrypt(t);
     }
     end = clock();
-    printf("AES_T-ECB-128 Decryption 1000000 plaintext(64 Bytes): %fs\n", (double)(end-start) / CLOCKS_PER_SEC);
+    printf("AES-128-TABLE ECB Decryption 1000000 plaintext(64 Bytes): %fs\n", (double)(end-start) / CLOCKS_PER_SEC);
 }
